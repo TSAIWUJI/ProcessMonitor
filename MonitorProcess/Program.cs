@@ -56,16 +56,14 @@ namespace MonitorProcess
         }
         private static void MonitorProcessFunction()
         {
-            if (!StartMonitorSuccess())
+            GetICAPTURELIST();
+            if (ICAPTURELIST.Count == 0)
             {
                 return;
             }
             int checkTimes = 0;
             bool isProcessFail = false;
-            while (ICAPTURELIST.Count == 0)
-            {
-                Thread.Sleep(10000);
-            }
+
             while (!isProcessFail)
             {
                 RefershInfo();
@@ -111,7 +109,7 @@ namespace MonitorProcess
             ICAPTURELIST.Clear();
             Console.WriteLine("ICAPTURELIST.Clear() 數量 : {0}", ICAPTURELIST.Count());
         }
-        private static bool StartMonitorSuccess()
+        private static void GetICAPTURELIST()
         {
             _log.DebugFormat("============### Start StartMonitor ###=============");
             int pid = GetProcessID(MONITORPROCESSNAME);
@@ -125,13 +123,10 @@ namespace MonitorProcess
             
             CaptureList p = new CaptureList(ProcInfo, MONITORPROCESSNAME);
             
-            int addCaptureCount = 0;
             foreach (var item in p.DeviceList())
             {
                 ICAPTURELIST.Add(CaptureFlowRecv(item.IP, item.PortID, item.DeviceID));
-                addCaptureCount++;
             }
-            return addCaptureCount != 0;
         }
         private static int GetProcessID(string processName)
         {
@@ -252,69 +247,5 @@ namespace MonitorProcess
             }
             return allRecvData / i;
         }
-
-        //private static List<int> GetProcessIDList(string processName)
-        //{
-        //    List<int> proList = new List<int>();
-
-        //    Process[] pArray = Process.GetProcesses().Where(a => a.ProcessName.Contains(processName)).ToArray();
-        //    if (pArray != null)
-        //    {
-        //        foreach (Process pro in pArray)
-        //        {
-        //            Console.WriteLine("GetProcessIDList --> Process Name is : {0}. Process ID is : {1}", processName, pro.Id);
-        //            proList.Add(pro.Id);
-        //        }
-        //    }
-
-        //    return proList;
-        //}
-
-        //private static List<int> GetLisetnPort(List<int> pids)
-        //{
-        //    _log.Debug("Start Sleep 30 Sec");
-        //    Thread.Sleep(3 * 10 * 1000);
-        //    _log.Debug("End Sleep 30 Sec");
-        //    Process pro = new Process();
-        //    pro.StartInfo.FileName = "cmd.exe";
-        //    pro.StartInfo.UseShellExecute = false;
-        //    pro.StartInfo.RedirectStandardInput = true;
-        //    pro.StartInfo.RedirectStandardOutput = true;
-        //    pro.StartInfo.RedirectStandardError = true;
-        //    pro.StartInfo.CreateNoWindow = true;
-        //    pro.Start();
-        //    pro.StandardInput.WriteLine("netstat -ano");
-        //    pro.StandardInput.WriteLine("exit");
-        //    Regex reg = new Regex("\\s+", RegexOptions.Compiled);
-        //    List<int> ports = new List<int>();
-        //    string line;
-        //    while ((line = pro.StandardOutput.ReadLine()) != null)
-        //    {
-        //        line = line.Trim();
-        //        if (line.StartsWith("TCP", StringComparison.OrdinalIgnoreCase))
-        //        {
-        //            line = reg.Replace(line, ",");
-        //            string[] arr = line.Split(',');
-        //            int temp = 0;
-        //            if (int.TryParse(arr[4], out temp))
-        //            {
-        //                if (pids.Contains(temp))
-        //                {
-        //                    string soc = arr[1];
-        //                    int pos = soc.LastIndexOf(':');
-        //                    int pot = int.Parse(soc.Substring(pos + 1));
-        //                    soc = soc.Remove(pos);
-        //                    if (!IPAddress.Parse(soc).Equals(IPAddress.Any))
-        //                    {
-        //                        ports.Add(pot);
-        //                        ProcInfo.ProcessID = temp;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    pro.Close();
-        //    return ports;
-        //}
     }
 }
