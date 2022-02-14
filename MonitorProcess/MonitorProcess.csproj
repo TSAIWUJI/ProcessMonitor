@@ -116,6 +116,10 @@
       <Project>{ca1ade1d-52bd-41d5-b0ec-4f9a58f15166}</Project>
       <Name>MonitorNTP</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HttpClientTest\HttpClientTest\HttpClientTest.csproj">
+      <Project>{27AA9A2D-9484-4D9B-95FB-0BB9C979FBAE}</Project>
+      <Name>HttpClientTest</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
