@@ -238,7 +238,7 @@ namespace MonitorProcess
                 if (recvData != 0)
                 {
                     i++;
-                    allRecvData = allRecvData + recvData;
+                    allRecvData += recvData;
                 }
             }
             if (allRecvData == 0)
